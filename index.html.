@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Читательская лаборатория — маленький человек</title>
+
+<style>
+:root {
+  --wine: #702d40;
+  --ink: #30262a;
+  --paper: #fffdf8;
+  --line: #e5d9cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #f5efe5;
+  font: 18px/1.65 Georgia, serif;
+}
+
+header {
+  background: var(--wine);
+  color: white;
+  padding: 55px max(22px, calc((100% - 1050px)/2));
+}
+
+header p {
+  max-width: 780px;
+  color: #f4e7dc;
+}
+
+h1 {
+  font-size: clamp(32px, 6vw, 58px);
+  line-height: 1.12;
+  margin: 12px 0;
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+h3 {
+  line-height: 1.3;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 25px 0;
+}
+
+nav a {
+  color: white;
+  border: 1px solid #c89ea5;
+  padding: 8px 14px;
+  border-radius: 25px;
+  text-decoration: none;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+section {
+  scroll-margin-top: 20px;
+  margin: 22px 0 40px;
+}
+
+.card,
+fieldset,
+.result {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 18px 0;
+}
+
+.tag {
+  font: 14px/1.5 Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.note {
+  border-left: 4px solid var(--wine);
+  padding: 12px 20px;
+  background: #eee3d9;
+}
+
+.muted {
+  color: #75636a;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid .card {
+  margin: 0;
+}
+
+details {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+a {
+  color: var(--wine);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--paper);
+  font-size: 16px;
+}
+
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid var(--line);
+  padding: 14px;
+}
+
+th {
+  background: #eadbd7;
+}
+
+label.identity {
+  display: block;
+  margin: 12px 0;
+  font-weight: bold;
+}
+
+input[type="text"] {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  padding: 12px;
+  font: inherit;
+  border: 1px solid #a99197;
+  border-radius: 8px;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid #a99197;
+  border-radius: 8px;
+  font: 16px/1.6 Arial, sans-serif;
+  color: var(--ink);
+  background: white;
+  resize: vertical;
+  margin-top: 8px;
+}
+
+blockquote {
+  margin: 22px 0 10px;
+  padding: 12px 20px;
+  border-left: 4px solid var(--wine);
+  background: #f1e7dd;
+  font-size: 22px;
+}
+
+#comparison textarea {
+  min-width: 190px;
+  min-height: 180px;
+}
+
+#comparison th {
+  min-width: 160px;
+}
+
+legend {
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+fieldset {
+  min-width: 0;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.option input {
+  margin-top: 8px;
+  accent-color: var(--wine);
+  flex-shrink: 0;
+}
+
+.option:has(input:checked) {
+  background: #f1e5e8;
+  border-color: var(--wine);
+}
+
+.correct {
+  background: #e5f4e8 !important;
+  border-color: #42784d !important;
+}
+
+.wrong {
+  background: #fff0ef !important;
+  border-color: #ad4747 !important;
+}
+
+.explanation {
+  margin-top: 16px;
+  padding: 15px;
+  background: #f2ede5;
+  border-radius: 8px;
+}
+
+button {
+  background: var(--wine);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 14px 20px;
+  font: bold 16px/1.4 Arial, sans-serif;
+  cursor: pointer;
+  margin: 6px 8px 6px 0;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+:focus-visible {
+  outline: 3px solid #bb8b39;
+  outline-offset: 4px;
+}
+
+progress {
+  width: 100%;
+  accent-color: var(--wine);
+}
+
+.result {
+  border: 2px solid var(--wine);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+footer {
+  padding: 30px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.message {
+  font-weight: bold;
+  color: #812f38;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  main {
+    padding: 12px;
+  }
+
+  .card,
+  fieldset {
+    padding: 16px;
+  }
+
+  body {
+    font-size: 17px;
+  }
+
+  header {
+    padding: 32px 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="tag">Читательская лаборатория · 9 класс</div>
+
+  <h1>Прочитай.<br>Заметь. Сопоставь.</h1>
+
+  <p>
+    «Маленький человек» у Пушкина, Гоголя и Достоевского.
+    Здесь ты исследуешь прочитанное и создаёшь собственный вывод.
+  </p>
+
+  <nav aria-label="Разделы сайта">
+    <a href="#concept">Маршрут</a>
+    <a href="#works">Цитаты и вопросы</a>
+    <a href="#compare">Моё сравнение</a>
+    <a href="#test">Тест</a>
+  </nav>
+</header>
+
+<main>
+
+<section id="concept">
+  <h2>01 / Сначала — произведения</h2>
+
+  <div class="card">
+    <p>
+      Прочитай полностью «Станционного смотрителя», «Шинель»
+      и «Бедных людей». Затем возвращайся сюда с текстами:
+      они понадобятся для поиска доказательств.
+    </p>
+
+    <p>
+      Открыть полный текст:
+      <a
+        href="https://ru.wikisource.org/wiki/Станционный_смотритель_(Пушкин)"
+        target="_blank"
+        rel="noopener"
+      >Пушкин</a>
+      ·
+      <a
+        href="https://ru.wikisource.org/wiki/Шинель_(Гоголь)/ПСС_1938_(СО)"
+        target="_blank"
+        rel="noopener"
+      >Гоголь</a>
+      ·
+      <a
+        href="https://ru.wikisource.org/wiki/Бедные_люди_(Достоевский)/Весь_текст"
+        target="_blank"
+        rel="noopener"
+      >Достоевский</a>.
+    </p>
+
+    <p>
+      <b>Рабочее понятие.</b>
+      «Маленький человек» — литературный тип героя невысокого
+      общественного положения, зависимого от людей,
+      обладающих властью или средствами. Его чувства
+      и достоинство окружающие часто не замечают.
+      Проверь это определение на текстах и найди различия
+      между героями.
+    </p>
+
+    <p class="note">
+      <b>Вопрос исследования:</b>
+      можно ли объяснить судьбы трёх героев только их
+      общественным положением?
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>1. Найди</h3>
+      <p>
+        Выбери эпизод и точную короткую цитату.
+        Укажи страницу своего издания или дату письма.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>2. Объясни</h3>
+      <p>
+        Кто говорит? Что происходит рядом с этой репликой?
+        Что она помогает понять?
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>3. Проверь</h3>
+      <p>
+        Найди деталь, которая усложняет твою первую оценку.
+        Затем сравни героев по одному основанию.
+      </p>
+    </div>
+  </div>
+
+  <details>
+    <summary>Инструменты анализа: короткие определения</summary>
+
+    <p>
+      <b>Поступок</b> — что герой делает.
+      <b>Мотив</b> — почему он так действует;
+      мотив нужно обосновать текстом.
+      <b>Отношения</b> — как герои воспринимают друг друга
+      и как это проявляется в общении.
+      <b>Художественная деталь</b> — значимая подробность,
+      помогающая раскрыть героя или ситуацию.
+    </p>
+
+    <p>
+      Не отождествляй автора с повествователем или героем.
+      Реплика персонажа выражает его взгляд;
+      авторская позиция выясняется через устройство
+      всего произведения.
+    </p>
+  </details>
+</section>
+
+<section id="works">
+  <h2>02 / Опорные цитаты: начни исследование</h2>
+
+  <p>
+    Найди каждый фрагмент в полном тексте, перечитай его
+    окружение и ответь своими словами. У вопросов для
+    размышления может быть несколько обоснованных ответов.
+  </p>
+
+  <article class="card">
+    <div class="tag">А. С. Пушкин</div>
+    <h3>«Станционный смотритель»</h3>
+
+    <blockquote>
+      «Сущий мученик четырнадцатого класса»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      кто так характеризует смотрителя?
+      Сопоставь эту оценку с отношением проезжающих.
+      Какие детали позволяют проверить её?
+    </p>
+
+    <blockquote>
+      «приведу я домой заблудшую овечку мою»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      какие представления Вырина о дочери и её будущем
+      слышны в этих словах? Всегда ли рассказ подтверждает
+      его ожидания?
+    </p>
+
+    <p class="muted">
+      Ориентиры: вступление повествователя;
+      мысли Вырина перед поисками в Петербурге.
+      <a
+        href="https://ru.wikisource.org/wiki/Станционный_смотритель_(Пушкин)"
+        target="_blank"
+        rel="noopener"
+      >Проверить цитаты в полном тексте</a>.
+    </p>
+
+    <details>
+      <summary>
+        Вопросы к характеру, поступкам и отношениям
+      </summary>
+
+      <ol>
+        <li>
+          Выбери поступок Вырина. Где в нём проявляются
+          любовь, страх или зависимость от чужой власти?
+          Докажи выбранное объяснение.
+        </li>
+        <li>
+          Какие две детали мешают дать Дуне однозначную
+          оценку?
+        </li>
+        <li>
+          Как меняется твоё отношение к Минскому при
+          сопоставлении разных эпизодов?
+        </li>
+        <li>
+          Сопоставь картины в доме смотрителя с развитием
+          отношений отца и дочери. Что совпадает,
+          а что расходится?
+        </li>
+      </ol>
+    </details>
+
+    <label class="identity">
+      Мой анализ: жанр и его признак;
+      поступок → возможный мотив → цитата → вывод
+
+      <textarea
+        data-note="pushkin"
+        aria-label="Анализ Станционного смотрителя"
+        placeholder="Выбери один эпизод и объясни его значение."
+      ></textarea>
+    </label>
+  </article>
+
+  <article class="card">
+    <div class="tag">Н. В. Гоголь</div>
+    <h3>«Шинель»</h3>
+
+    <blockquote>
+      «Оставьте меня, зачем вы меня обижаете?»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      что предшествует реплике? Как на неё реагируют
+      окружающие? Сравни разные реакции.
+    </p>
+
+    <blockquote>«Я брат твой»</blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      это произнесённая реплика Башмачкина или смысл,
+      услышанный другим человеком?
+      Почему различие важно?
+    </p>
+
+    <blockquote>
+      «Полтораста рублей за шинель!»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      какие детали текста объясняют силу этой реакции?
+      Как меняется значение вещи для героя?
+    </p>
+
+    <p class="muted">
+      Ориентиры: эпизод с молодым сослуживцем;
+      разговор с Петровичем о цене.
+      <a
+        href="https://ru.wikisource.org/wiki/Шинель_(Гоголь)/ПСС_1938_(СО)"
+        target="_blank"
+        rel="noopener"
+      >Проверить цитаты в полном тексте</a>.
+    </p>
+
+    <details>
+      <summary>
+        Вопросы к характеру, поступкам и отношениям
+      </summary>
+
+      <ol>
+        <li>
+          Подтверждает ли отношение Башмачкина к работе
+          мысль о полном отсутствии у него внутренней жизни?
+        </li>
+        <li>
+          Сравни отношение сослуживцев к герою в двух
+          разных эпизодах. Что изменилось и почему?
+        </li>
+        <li>
+          Что важнее для «значительного лица» во время
+          разговора с просителем?
+          Найди речевые доказательства.
+        </li>
+        <li>
+          Предложи своё объяснение фантастического финала
+          и укажи деталь, на которую опираешься.
+        </li>
+      </ol>
+    </details>
+
+    <label class="identity">
+      Мой анализ: жанр и его признак;
+      поступок → возможный мотив → цитата → вывод
+
+      <textarea
+        data-note="gogol"
+        aria-label="Анализ Шинели"
+        placeholder="Раздели наблюдение над текстом и собственное толкование."
+      ></textarea>
+    </label>
+  </article>
+
+  <article class="card">
+    <div class="tag">Ф. М. Достоевский</div>
+    <h3>«Бедные люди»</h3>
+
+    <blockquote>
+      «амбиция моя мне дороже всего»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      что Макар называет амбицией?
+      Какие события помогают понять значение этого
+      слова в его письме?
+    </p>
+
+    <blockquote>
+      «Одного боюсь: сплетен боюсь»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      чем чужое мнение опасно для героя?
+      Найди эпизод, позволяющий проверить твою версию.
+    </p>
+
+    <blockquote>
+      «А то у меня и слог теперь формируется…»
+    </blockquote>
+
+    <p>
+      <b>Исследуй:</b>
+      сопоставь речь Макара в начале и в конце переписки.
+      Что можно заметить в обращениях, повторах
+      и незаконченных фразах?
+    </p>
+
+    <p class="muted">
+      Ориентиры: письмо Макара с рассуждением об амбиции;
+      заключительное письмо. Найди и запиши дату
+      нужного письма.
+      <a
+        href="https://ru.wikisource.org/wiki/Бедные_люди_(Достоевский)/Весь_текст"
+        target="_blank"
+        rel="noopener"
+      >Проверить цитаты в полном тексте</a>.
+    </p>
+
+    <details>
+      <summary>
+        Вопросы к характеру, поступкам и отношениям
+      </summary>
+
+      <ol>
+        <li>
+          Выбери случай, когда Макар помогает Варваре.
+          Можно ли объяснить его поступок только
+          одним мотивом?
+        </li>
+        <li>
+          Какие обстоятельства влияют на решения Варвары?
+          Отдели прямо сказанное от своей гипотезы.
+        </li>
+        <li>
+          Найди письма о чтении Пушкина и Гоголя.
+          Почему реакции Макара различаются?
+          Согласен ли ты с ним как читатель?
+        </li>
+        <li>
+          Выбери одну ситуацию и сопоставь, что о ней
+          сообщают Макар и Варвара. Что дают два голоса?
+        </li>
+      </ol>
+    </details>
+
+    <label class="identity">
+      Мой анализ: жанр и его признак;
+      поступок → возможный мотив → цитата → вывод
+
+      <textarea
+        data-note="dostoevsky"
+        aria-label="Анализ Бедных людей"
+        placeholder="Добавь дату письма и короткую цитату из своего издания."
+      ></textarea>
+    </label>
+  </article>
+</section>
+
+<section id="compare">
+  <h2>03 / Сравнение, которое составишь ты</h2>
+
+  <p>
+    В каждой строке исследуй одно и то же основание.
+    В ячейке запиши наблюдение, короткое доказательство
+    и объяснение. Не ограничивайся словами
+    «бедный» или «добрый».
+  </p>
+
+  <div
+    class="table-wrap"
+    tabindex="0"
+    aria-label="Заполняемая сравнительная таблица"
+  >
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Основание</th>
+          <th scope="col">«Станционный смотритель»</th>
+          <th scope="col">«Шинель»</th>
+          <th scope="col">«Бедные люди»</th>
+        </tr>
+      </thead>
+      <tbody id="comparison"></tbody>
+    </table>
+  </div>
+
+  <label class="identity">
+    Мой общий вывод: одно сходство и два различия,
+    подтверждённые текстами
+
+    <textarea
+      data-note="conclusion"
+      aria-label="Общий вывод"
+      placeholder="Общее между героями я вижу в… Однако у Пушкина… у Гоголя… у Достоевского… Это подтверждают…"
+    ></textarea>
+  </label>
+
+  <details>
+    <summary>Самопроверка аргумента</summary>
+
+    <ul>
+      <li>
+        Я сопоставляю героев по одному основанию,
+        а не перечисляю разные признаки.
+      </li>
+      <li>
+        Мой вывод подтверждают эпизоды из всех
+        трёх произведений.
+      </li>
+      <li>
+        Я различаю слова героя и позицию автора.
+      </li>
+      <li>
+        Я назвал не только сходство, но и различия.
+      </li>
+      <li>
+        Я могу объяснить, почему моя цитата доказывает мысль.
+      </li>
+    </ul>
+  </details>
+
+  <button id="download-notes" type="button">
+    Скачать мои заметки (.txt)
+  </button>
+
+  <p class="muted">
+    Заметки и таблица не отправляются учителю автоматически
+    и исчезнут после обновления страницы. Скачай их перед
+    закрытием сайта. В Google-таблицу отправляются только
+    данные теста.
+  </p>
+</section>
+
+<section id="test">
+  <h2>04 / Проверь понимание: 10 вопросов</h2>
+
+  <p>
+    Заверши чтение и собственный анализ.
+    В каждом вопросе один наиболее точный ответ.
+    После завершения теста появятся баллы и объяснения.
+  </p>
+
+  <label class="option">
+    <input type="checkbox" id="reading-done">
+    <span>
+      Я прочитал(а) все три произведения
+      и готов(а) проверить понимание.
+    </span>
+  </label>
+
+  <div
+    id="result"
+    class="result"
+    tabindex="-1"
+    hidden
+  ></div>
+
+  <form id="quiz" hidden>
+    <div class="card">
+      <label class="identity">
+        Имя и фамилия
+        <input
+          type="text"
+          id="student"
+          required
+          maxlength="80"
+          autocomplete="name"
+        >
+      </label>
+
+      <label class="identity">
+        Класс
+        <input
+          type="text"
+          id="classroom"
+          required
+          maxlength="20"
+          placeholder="Например, 9А"
+        >
+      </label>
+
+      <p class="muted">
+        После завершения имя, класс, ответы и баллы
+        будут отправлены учителю, если отправка подключена.
+      </p>
+    </div>
+
+    <p id="counter">Отвечено: 0 из 10</p>
+
+    <progress
+      id="progress"
+      value="0"
+      max="10"
+      aria-label="Количество отвеченных вопросов"
+    ></progress>
+
+    <div id="questions"></div>
+
+    <p id="error" class="message" role="alert"></p>
+
+    <button id="check" type="submit">
+      Завершить тест
+    </button>
+  </form>
+
+  <div id="after" hidden>
+    <p
+      id="delivery"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <button id="send-again" type="button">
+      Повторить отправку
+    </button>
+
+    <button id="restart" type="button">
+      Пройти ещё раз
+    </button>
+  </div>
+
+  <noscript>
+    Для работы таблицы и теста включи JavaScript
+    в настройках браузера.
+  </noscript>
+</section>
+
+</main>
+
+<footer>
+  Читательская лаборатория · Сначала текст,
+  затем собственный вывод
+</footer>
+
+<iframe
+  name="answer-receipt"
+  title="Подтверждение отправки результата"
+  hidden
+></iframe>
+
+<script>
+// Вставь ссылку веб-приложения Apps Script,
+// которая заканчивается на /exec.
+const GOOGLE_SCRIPT_URL = "ВСТАВЬ_ССЫЛКУ_СЮДА";
+
+const VERSION = "little-person-v1";
+
+const QUESTIONS = [
+  {
+    q: "Кого в литературе называют «маленьким человеком»?",
+    o: [
+      "Любого второстепенного персонажа",
+      "Человека невысокого общественного положения, чьи чувства и достоинство часто не замечают",
+      "Героя, не способного испытывать сильные чувства",
+      "Только человека маленького роста"
+    ],
+    a: 1,
+    e: "Определение связано с общественным положением и незащищённостью. Оно не означает, что внутренний мир героя беден или его жизнь не имеет ценности."
+  },
+  {
+    q: "Что прежде всего побуждает Вырина отправиться в Петербург?",
+    o: [
+      "Желание получить новую должность",
+      "Желание увидеть столицу",
+      "Любовь к дочери и тревога за её судьбу",
+      "Стремление получить деньги от Минского"
+    ],
+    a: 2,
+    e: "Вырин пытается найти Дуню и вернуть прежнюю близость. Он боится, что Минский оставит её. При этом финал не подтверждает его опасений о материальном положении дочери."
+  },
+  {
+    q: "Какой смысл имеет возвращение Дуни на могилу отца?",
+    o: [
+      "Её горе подчёркивает невосполнимость утраты и невозможность примирения при жизни",
+      "Отец и дочь наконец разговаривают",
+      "Выясняется, что Дуня никогда не любила отца",
+      "Все последствия разлуки исчезают"
+    ],
+    a: 0,
+    e: "Плач Дуни показывает сохранение чувств к отцу. Но встреча происходит слишком поздно: поговорить с ним и изменить случившееся она уже не может."
+  },
+  {
+    q: "Почему новая шинель так важна для Башмачкина?",
+    o: [
+      "Она сразу повышает его в чине",
+      "Она освобождает его от службы",
+      "Она делает его владельцем дома",
+      "Она даёт тепло, становится целью и приносит непривычное внимание окружающих"
+    ],
+    a: 3,
+    e: "Шинель имеет практическое и душевное значение. Ожидание покупки наполняет жизнь надеждой, а обновка ненадолго меняет отношение сослуживцев."
+  },
+  {
+    q: "Что раскрывает приём Башмачкина у «значительного лица»?",
+    o: [
+      "Готовность власти всегда помогать слабому",
+      "Равнодушие к человеку за демонстрацией чина и служебного порядка",
+      "Желание героя самому стать начальником",
+      "Причастность начальника к краже"
+    ],
+    a: 1,
+    e: "Вместо участия Башмачкин получает выговор. Для «значительного лица» важнее показать власть, чем понять беду просителя."
+  },
+  {
+    q: "Как можно истолковать фантастический финал «Шинели»?",
+    o: [
+      "Как образ возмездия за унижение беззащитного человека",
+      "Как доказательство, что шинель изначально была волшебной",
+      "Как подробный отчёт полиции",
+      "Как утверждение, что кража решает любую проблему"
+    ],
+    a: 0,
+    e: "Одна из интерпретаций финала — символическое возмездие: герой, лишённый силы при жизни, после смерти пугает тех, перед кем раньше был бессилен."
+  },
+  {
+    q: "Что даёт форма писем в «Бедных людях»?",
+    o: [
+      "Только перечень расходов героев",
+      "Отсутствие различий между героями",
+      "Возможность услышать собственные голоса героев и узнать их переживания изнутри",
+      "Полное отсутствие эмоциональных оценок"
+    ],
+    a: 2,
+    e: "Эпистолярная форма раскрывает внутренний мир через речь, признания и заботы героев. Бедные люди получают возможность сами рассказать о себе."
+  },
+  {
+    q: "Почему Макар Девушкин болезненно воспринимает «Шинель»?",
+    o: [
+      "Он не понимает, где происходит действие",
+      "Ему не нравится, что в повести есть портной",
+      "Он уверен, что чиновники не могут быть героями книг",
+      "Он узнаёт близкое себе положение и воспринимает изображение бедного чиновника как унизительное"
+    ],
+    a: 3,
+    e: "Макар боится, что частная жизнь бедняка становится предметом чужого любопытства и насмешки. В его реакции проявляются самолюбие и стремление защитить достоинство."
+  },
+  {
+    q: "Как точнее объяснить согласие Варвары выйти замуж за Быкова?",
+    o: [
+      "Как беззаботный выбор героини, у которой нет трудностей",
+      "Как попытку обрести материальную определённость в условиях нужды и зависимости",
+      "Как месть Самсону Вырину",
+      "Как стремление получить чиновничий чин"
+    ],
+    a: 1,
+    e: "Решение Варвары связано с уязвимостью её положения. Надежда на обеспеченность не делает будущий брак безусловно счастливым и показывает ограниченность её выбора."
+  },
+  {
+    q: "Какой вывод точнее всего объединяет три произведения?",
+    o: [
+      "Все бедные герои одинаковы по характеру",
+      "Уважения заслуживает только высокий чиновник",
+      "За скромным положением скрывается неповторимая личность, чья боль заслуживает внимания",
+      "Главная причина всех бед — отсутствие дорогой одежды"
+    ],
+    a: 2,
+    e: "Авторы по-разному показывают семью, чиновный мир и самосознание героя, но каждый обращает внимание на человеческую ценность социально незаметной личности."
+  }
+];
+
+const $ = id => document.getElementById(id);
+
+let completed = false;
+let attempt = null;
+let timer = null;
+let busy = false;
+
+function add(parent, tag, text, className) {
+  const element = document.createElement(tag);
+
+  if (text !== undefined) {
+    element.textContent = text;
+  }
+
+  if (className) {
+    element.className = className;
+  }
+
+  parent.append(element);
+  return element;
+}
+
+// Самостоятельная сравнительная таблица.
+const CRITERIA = [
+  "Жанр и признак, который его подтверждает",
+  "Положение героя: факт и его значение",
+  "Ценность, которую герой стремится сохранить",
+  "Поступок и возможные мотивы",
+  "Отношение другого персонажа: речь и действие",
+  "Внутренний мир: как читатель о нём узнаёт?",
+  "Деталь, усложняющая первоначальную оценку",
+  "Финал: мой вывод и доказательство"
+];
+
+CRITERIA.forEach((criterion, rowIndex) => {
+  const row = add($("comparison"), "tr");
+  const heading = add(row, "th", criterion);
+  heading.scope = "row";
+
+  ["Пушкин", "Гоголь", "Достоевский"].forEach(
+    (author, columnIndex) => {
+      const cell = add(row, "td");
+      const input = add(cell, "textarea");
+
+      input.dataset.note =
+        "compare-" + rowIndex + "-" + columnIndex;
+
+      input.setAttribute(
+        "aria-label",
+        author + ": " + criterion
+      );
+
+      input.placeholder =
+        "Наблюдение → цитата / эпизод → объяснение";
+    }
+  );
+});
+
+// Тест открывается после отметки ученика о прочтении.
+$("reading-done").addEventListener("change", () => {
+  $("quiz").hidden = !$("reading-done").checked;
+});
+
+// Выгрузка самостоятельной работы ученика.
+$("download-notes").addEventListener("click", () => {
+  const lines = [
+    "МОЯ ЧИТАТЕЛЬСКАЯ ЛАБОРАТОРИЯ",
+    "Дата: " + new Date().toLocaleDateString("ru-RU")
+  ];
+
+  document.querySelectorAll(
+    "textarea[data-note]"
+  ).forEach(element => {
+    lines.push(
+      "\n" +
+      element.getAttribute("aria-label") +
+      "\n" +
+      (element.value.trim() || "Не заполнено")
+    );
+  });
+
+  const blob = new Blob(
+    [lines.join("\n")],
+    { type: "text/plain;charset=utf-8" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "moi_chitatelskie_zametki.txt";
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+// Построение теста.
+function render() {
+  $("questions").replaceChildren();
+
+  QUESTIONS.forEach((question, index) => {
+    const box = add($("questions"), "fieldset");
+
+    add(
+      box,
+      "legend",
+      (index + 1) + ". " + question.q
+    );
+
+    question.o.forEach((text, optionIndex) => {
+      const label = add(
+        box,
+        "label",
+        undefined,
+        "option"
+      );
+
+      const input = add(label, "input");
+      input.type = "radio";
+      input.name = "q" + index;
+      input.value = optionIndex;
+
+      add(label, "span", text);
+    });
+
+    const explanation = add(
+      box,
+      "div",
+      undefined,
+      "explanation"
+    );
+
+    explanation.hidden = true;
+  });
+}
+
+function answers() {
+  return QUESTIONS.map((question, index) => {
+    const selected = $("quiz").querySelector(
+      'input[name="q' + index + '"]:checked'
+    );
+
+    return selected ? Number(selected.value) : null;
+  });
+}
+
+$("quiz").addEventListener("change", () => {
+  const count = answers().filter(
+    answer => answer !== null
+  ).length;
+
+  $("counter").textContent =
+    "Отвечено: " + count + " из 10";
+
+  $("progress").value = count;
+  $("error").textContent = "";
+});
+
+// Проверка ответов и объяснения.
+$("quiz").addEventListener("submit", event => {
+  event.preventDefault();
+
+  if (completed) return;
+
+  const name = $("student").value.trim();
+  const group = $("classroom").value.trim();
+  const selected = answers();
+
+  if (!name || !group) {
+    $("error").textContent = "Укажи имя и класс.";
+
+    (!name ? $("student") : $("classroom")).focus();
+    return;
+  }
+
+  const missing = selected.indexOf(null);
+
+  if (missing !== -1) {
+    $("error").textContent =
+      "Ответь на вопрос №" + (missing + 1) + ".";
+
+    $("questions")
+      .children[missing]
+      .querySelector("input")
+      .focus();
+
+    return;
+  }
+
+  completed = true;
+  $("reading-done").disabled = true;
+
+  let score = 0;
+
+  QUESTIONS.forEach((question, index) => {
+    const box = $("questions").children[index];
+    const labels = box.querySelectorAll("label");
+
+    const correct =
+      selected[index] === question.a;
+
+    if (correct) {
+      score++;
+    } else {
+      labels[selected[index]]
+        .classList.add("wrong");
+    }
+
+    labels[question.a].classList.add("correct");
+
+    box.querySelectorAll("input").forEach(input => {
+      input.disabled = true;
+    });
+
+    const explanation = box.querySelector(
+      ".explanation"
+    );
+
+    add(
+      explanation,
+      "strong",
+      correct ? "Верно." : "Ошибка."
+    );
+
+    add(
+      explanation,
+      "p",
+      "Правильный ответ: " + question.o[question.a]
+    );
+
+    add(explanation, "p", question.e);
+    explanation.hidden = false;
+  });
+
+  $("student").disabled = true;
+  $("classroom").disabled = true;
+  $("check").hidden = true;
+
+  $("result").replaceChildren();
+
+  add(
+    $("result"),
+    "h3",
+    "Результат: " + score + " из 10"
+  );
+
+  const feedback = score >= 9
+    ? "Ты хорошо понимаешь героев и умеешь сопоставлять произведения."
+    : score >= 7
+      ? "Хороший результат. Разбери объяснения к ошибкам."
+      : "Вернись к текстам и своим заметкам, изучи объяснения, затем попробуй ещё раз.";
+
+  add($("result"), "p", feedback);
+
+  add(
+    $("result"),
+    "p",
+    "Ниже показаны твои ответы, правильные варианты и объяснения."
+  );
+
+  $("result").hidden = false;
+  $("after").hidden = false;
+
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+
+  attempt = {
+    id: Array.from(
+      bytes,
+      value => value.toString(16).padStart(2, "0")
+    ).join(""),
+    version: VERSION,
+    name: name,
+    group: group,
+    answers: selected
+  };
+
+  send();
+
+  $("result").focus();
+  $("result").scrollIntoView({
+    behavior: "smooth"
+  });
+});
+
+function finishSend(text) {
+  clearTimeout(timer);
+  busy = false;
+
+  $("delivery").textContent = text;
+  $("send-again").disabled = false;
+  $("restart").disabled = false;
+}
+
+// Отправка в Google Apps Script.
+function send() {
+  if (!attempt || busy) return;
+
+  const validURL =
+    /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/;
+
+  if (!validURL.test(GOOGLE_SCRIPT_URL)) {
+    finishSend(
+      "Результат показан на сайте. Отправка учителю пока не подключена."
+    );
+    return;
+  }
+
+  busy = true;
+
+  $("send-again").disabled = true;
+  $("restart").disabled = true;
+
+  $("delivery").textContent =
+    "Отправляем результат учителю…";
+
+  const form = document.createElement("form");
+
+  form.method = "POST";
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = "answer-receipt";
+  form.hidden = true;
+
+  const data = document.createElement("input");
+
+  data.type = "hidden";
+  data.name = "payload";
+  data.value = JSON.stringify(attempt);
+
+  form.append(data);
+  document.body.append(form);
+
+  form.submit();
+  form.remove();
+
+  timer = setTimeout(() => {
+    finishSend(
+      "Подтверждение не получено. Результат мог сохраниться. Проверь интернет и нажми «Повторить отправку»: дубликат этой попытки не создастся."
+    );
+  }, 30000);
+}
+
+// Подтверждение от Google Apps Script.
+window.addEventListener("message", event => {
+  const trusted =
+    /^https:\/\/([a-z0-9-]+\.)*(googleusercontent\.com|script\.google\.com)$/
+      .test(event.origin);
+
+  if (
+    !trusted ||
+    !attempt ||
+    event.data?.type !== "literature-receipt" ||
+    event.data.id !== attempt.id
+  ) {
+    return;
+  }
+
+  if (event.data.ok) {
+    finishSend(
+      "Результат сохранён в таблице учителя."
+    );
+
+    $("send-again").hidden = true;
+  } else {
+    finishSend(
+      "Не удалось сохранить результат. Проверь подключение таблицы и повтори отправку."
+    );
+  }
+});
+
+$("send-again").addEventListener("click", send);
+
+// Новая попытка не удаляет читательские заметки.
+$("restart").addEventListener("click", () => {
+  if (busy) return;
+
+  attempt = null;
+  completed = false;
+
+  $("reading-done").disabled = false;
+
+  clearTimeout(timer);
+  $("quiz").reset();
+
+  $("student").disabled = false;
+  $("classroom").disabled = false;
+
+  $("check").hidden = false;
+  $("result").hidden = true;
+  $("after").hidden = true;
+  $("send-again").hidden = false;
+
+  $("error").textContent = "";
+  $("counter").textContent = "Отвечено: 0 из 10";
+  $("progress").value = 0;
+
+  render();
+  $("student").focus();
+});
+
+render();
+</script>
+
+</body>
+</html>
